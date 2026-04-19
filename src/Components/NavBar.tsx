@@ -16,7 +16,12 @@ import { Link } from "react-router-dom";
           >
             Home
           </Link>
-
+          <Link 
+            to="/home/subpage" 
+            className="hover:text-amber-400 transition"
+          >
+            Sub Page
+          </Link>
           <Link 
             to="/login" 
             className="hover:text-amber-400 transition"

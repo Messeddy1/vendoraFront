@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { renderPagesRoutes } from "../Pages/Pages_routers";
 import MainLayout from "../Pages/MainLayout";

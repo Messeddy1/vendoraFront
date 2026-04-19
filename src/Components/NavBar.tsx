@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
         {/* Links */}
         <div className="flex items-center gap-6">
           <Link 
-            to="/" 
+            to="/home" 
             className="hover:text-amber-400 transition"
           >
             Home

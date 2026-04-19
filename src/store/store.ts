@@ -1,9 +1,17 @@
 // store/store.ts
 import { configureStore } from '@reduxjs/toolkit'
-import rootReducer from './rootReducer'
+import { rootReducer } from './rootReducer'
 
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer:{
+    ...rootReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+      devTools: import.meta.env.VITE_ENV === "development",
+
 })
 
 export type RootState = ReturnType<typeof store.getState>

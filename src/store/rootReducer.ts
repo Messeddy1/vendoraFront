@@ -1,8 +1,7 @@
 // store/rootReducer.ts
-import { combineReducers } from '@reduxjs/toolkit'
+import { PagesSlices } from '../Pages/Pages_slices'
 
-const rootReducer = combineReducers({
-  home: "",
-})
+export const rootReducer ={
+  ...PagesSlices,
+}
 
-export default rootReducer

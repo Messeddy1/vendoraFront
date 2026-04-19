@@ -7,7 +7,7 @@ export default function PagesRoutes() {
   return (
     <Routes>
       {/* here you can add your routes */}
-      <Route path="/" element={<HomeRoutes />} />
+      <Route index element={<HomeRoutes />} />
       <Route path="/home/*" element={<HomeRoutes />} />
       <Route path="/login" element={<LoginRoutes />} />
       <Route path="*" element={<NotFound />} />

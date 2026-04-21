@@ -21,7 +21,6 @@ export default function Login() {
       [e.target.name]: e.target.value,
     });
   };
-const hello:string = 5678;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);

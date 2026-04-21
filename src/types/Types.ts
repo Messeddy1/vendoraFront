@@ -1,0 +1,18 @@
+export const STATUS = {
+  INIT: "INIT",
+  PENDING: "PENDING",
+  FULFIELD: "FULFIELD",
+  REJECTED: "REJECTED",
+  IDLE: "IDLE",
+} as const;
+
+export const ACTIONS = {
+  IDLE: "IDLE",
+  READ: "READ",
+  CREATE: "CREATE",
+  DELETE: "DELETE",
+  MULTIDELETE: "MULTIDELETE",
+  UPDATE: "UPDATE",
+  RESTOR: "RESTOR",
+  MULTIRESTOR: "MULTIRESTOR",
+} as const;

@@ -1,4 +1,4 @@
-import LoginSlice from './Login/LoginSlice';
-export const PagesSlices={
-    login:LoginSlice,
-}
+import AuthSlice from "./Auth/AuthSlice";
+export const PagesSlices = {
+  auth: AuthSlice,
+};

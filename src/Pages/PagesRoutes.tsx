@@ -2,21 +2,20 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useAppSelector } from "../store/reduxHooks";
 import React from "react";
 const HomeRoutes = React.lazy(() => import("./Home/HomeRoutes"));
-const LoginRoutes = React.lazy(() => import("./Login/LoginRoutes"));
-const NotFound = React.lazy(() => import("../Components/NotFound"));
+const AuthRoutes = React.lazy(() => import("./Auth/AuthRoutes"));
 export default function PagesRoutes() {
-  const { user } = useAppSelector((state) => state.login);
+  const { user } = useAppSelector((state) => state.auth);
 
   return (
     <Routes>
       <Route path="/home/*" element={<HomeRoutes />} />
 
       <Route
-        path="/login/*"
-        element={user.name ? <Navigate to="/home" replace /> : <LoginRoutes />}
+        path="/auth/*"
+        element={user ? <Navigate to="/home" replace /> : <AuthRoutes />}
       />
 
-      <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
   );
 }

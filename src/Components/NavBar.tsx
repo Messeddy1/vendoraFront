@@ -1,11 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
-import { clearUser } from "../Pages/Login/LoginSlice";
+import { logout } from "../Pages/Auth/cors/_request";
 
 export const Navbar = () => {
-  const { user } = useAppSelector((state) => state.login);
+  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-
+  console.log(user);
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     isActive
       ? "text-amber-400 font-semibold"
@@ -14,7 +14,6 @@ export const Navbar = () => {
   return (
     <nav className="w-full bg-gray-900 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        
         <h1 className="text-xl font-bold">MyApp</h1>
 
         <div className="flex items-center gap-6">
@@ -26,15 +25,15 @@ export const Navbar = () => {
             Sub Page
           </NavLink>
 
-          {user.name ? (
+          {user ? (
             <button
               className="hover:text-amber-400 transition"
-              onClick={() => dispatch(clearUser())}
+              onClick={() => dispatch(logout())}
             >
               Logout
             </button>
           ) : (
-            <NavLink to="/login" className={linkClass}>
+            <NavLink to="/auth/login" className={linkClass}>
               Login
             </NavLink>
           )}

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/reduxHooks";
 import { useNavigate } from "react-router-dom";
 import { login } from "../Auth/cors/_request";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
 
 export default function Login() {
   const dispatch = useAppDispatch();
@@ -13,6 +15,7 @@ export default function Login() {
     email: "",
     password: "",
   });
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -21,7 +24,8 @@ export default function Login() {
       [e.target.name]: e.target.value,
     });
   };
-  const handleSubmit = async (e: React.FormEvent) => {
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     const response = await dispatch(login(userData));
@@ -33,84 +37,63 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-700">
-      <div className="bg-gray-800 p-8 rounded-2xl shadow-lg w-100 text-white">
-        <h1 className="text-3xl font-bold text-center mb-6">Login</h1>
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 text-foreground">
+      <div className="w-full max-w-md rounded-3xl border border-border bg-card p-8 shadow-sm">
+        <h1 className="text-3xl font-semibold text-foreground text-center mb-6">Login to Market</h1>
 
-        {/* Display general error */}
         {error && (
-          <div className="mb-4 p-3 bg-red-600 text-white rounded text-sm">
+          <div className="mb-4 rounded-xl bg-destructive/10 border border-destructive/20 p-4 text-sm text-destructive">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* Email */}
-          <div>
-            <input
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <label className="block text-sm text-foreground">Email</label>
+            <Input
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder="your@email.com"
               value={userData.email}
               onChange={handleChange}
-              className={`w-full p-3 rounded bg-gray-700 focus:outline-none focus:ring-2 ${
-                fieldErrors?.email
-                  ? "focus:ring-red-500"
-                  : "focus:ring-blue-500"
-              }`}
+              className="bg-background border-border text-foreground placeholder:text-muted-foreground"
               required
             />
             {fieldErrors?.email && (
-              <p className="text-red-400 text-sm mt-1">
-                {fieldErrors.email[0]}
-              </p>
+              <p className="text-xs text-destructive">{fieldErrors.email[0]}</p>
             )}
           </div>
 
-          {/* Password */}
-          <div>
-            <input
+          <div className="space-y-2">
+            <label className="block text-sm text-foreground">Password</label>
+            <Input
               type="password"
               name="password"
               placeholder="Password"
               value={userData.password}
               onChange={handleChange}
-              className={`w-full p-3 rounded bg-gray-700 focus:outline-none focus:ring-2 ${
-                fieldErrors?.password
-                  ? "focus:ring-red-500"
-                  : "focus:ring-blue-500"
-              }`}
+              className="bg-background border-border text-foreground placeholder:text-muted-foreground"
               required
             />
             {fieldErrors?.password && (
-              <p className="text-red-400 text-sm mt-1">
-                {fieldErrors.password[0]}
-              </p>
+              <p className="text-xs text-destructive">{fieldErrors.password[0]}</p>
             )}
           </div>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className={`bg-blue-600 hover:bg-blue-700 transition p-3 rounded font-semibold text-white ${
-              loading ? "cursor-not-allowed opacity-50" : ""
-            }`}
-          >
+          <Button type="submit" disabled={loading} className="w-full">
             {loading ? "Logging in..." : "Login"}
-          </button>
+          </Button>
         </form>
-        <div className="text-center mt-4">
-          <p className="text-gray-400">
-            Don't have an account?{" "}
-            <button
-              type="button"
-              onClick={() => navigate("/auth/register")}
-              className="text-blue-400 hover:text-blue-300 underline"
-            >
-              Register here
-            </button>
-          </p>
+
+        <div className="mt-6 text-center text-sm text-muted-foreground">
+          Don't have an account?{' '}
+          <button
+            type="button"
+            onClick={() => navigate("/auth/register")}
+            className="font-semibold text-primary hover:text-primary/80"
+          >
+            Register here
+          </button>
         </div>
       </div>
     </div>

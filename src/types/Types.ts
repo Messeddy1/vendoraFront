@@ -1,5 +1,4 @@
 export const STATUS = {
-  INIT: "INIT",
   PENDING: "PENDING",
   FULFIELD: "FULFIELD",
   REJECTED: "REJECTED",

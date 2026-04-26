@@ -1,27 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/reduxHooks";
 import { useNavigate } from "react-router-dom";
-import { getUserInfo, login } from "../Auth/cors/_request";
+import { login } from "../Auth/cors/_request";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 
 export default function Login() {
+  const params = new URLSearchParams(location.search);
+  const redirect = params.get("redirect") || "/";
   const dispatch = useAppDispatch();
   const { error, fieldErrors } = useAppSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAppSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (!user) {
-      dispatch(getUserInfo());
-    }
-  }, [user, dispatch]);
   const [userData, setUserData] = useState({
     email: "",
     password: "",
   });
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -39,24 +34,16 @@ export default function Login() {
       setLoading(true);
       const response = await dispatch(login(userData));
       console.log(response);
-
-      // Check if login was successful and navigate
-      if (response.payload) {
-        navigate("/", { replace: true });
+      if (response.meta.requestStatus === "fulfilled") {
+        navigate(redirect, { replace: true });
       }
+      // Check if login was successful and navigate
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
   };
-
-  // Redirect if already logged in
-  useEffect(() => {
-    if (user) {
-      navigate("/", { replace: true });
-    }
-  }, [user, navigate]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 text-foreground">

@@ -4,7 +4,7 @@ const ProfilePage = React.lazy(() => import("./profile"));
 export default function ProfileRoutes() {
   return (
     <Routes>
-      <Route path="profile/*" element={< ProfilePage/>}/>
+      <Route index element={< ProfilePage/>}/>
     </Routes>
   );
 }

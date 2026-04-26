@@ -7,14 +7,14 @@ const initialState: {
   status: (typeof STATUS)[keyof typeof STATUS];
   action: (typeof ACTIONS)[keyof typeof ACTIONS];
   error: string | null;
-  user: undefined | User;
+  user: null | User;
   fieldErrors: Record<string, string[]> | null;
 } = {
   status: STATUS.IDLE,
   action: ACTIONS.IDLE,
   error: null,
   fieldErrors: null,
-  user: undefined,
+  user: null,
 };
 
 const AuthSlice = createSlice({
@@ -29,7 +29,6 @@ const AuthSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
         state.user = action.payload;
-        console.log(state.user);
         state.status = STATUS.FULFIELD;
         state.action = ACTIONS.READ;
         state.error = null;
@@ -67,7 +66,6 @@ const AuthSlice = createSlice({
       })
       // get user info
       .addCase(getUserInfo.pending, (state) => {
-        state.user = undefined;
         state.status = STATUS.PENDING;
         state.action = ACTIONS.READ;
       })
@@ -77,7 +75,7 @@ const AuthSlice = createSlice({
         state.action = ACTIONS.READ;
       })
       .addCase(getUserInfo.rejected, (state) => {
-        state.user = undefined;
+        state.user = null;
         state.status = STATUS.REJECTED;
         state.action = ACTIONS.READ;
       })
@@ -87,7 +85,7 @@ const AuthSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.status = STATUS.FULFIELD;
-        state.user = undefined;
+        state.user = null;
         state.action = ACTIONS.READ;
       })
       .addCase(logout.rejected, (state) => {

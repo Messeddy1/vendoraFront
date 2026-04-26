@@ -1,7 +1,7 @@
 
-export default function profile() {
+export default function Profile() {
   return (
-    <div>
+    <div className=" w-full h-screen">
       this is a profile page
     </div>
   )

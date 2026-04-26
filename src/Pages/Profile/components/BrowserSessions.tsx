@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 interface Session {
@@ -56,6 +56,7 @@ export default function BrowserSessions() {
 
   const handleLogoutSession = (sessionId: string) => {
     setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+    setError("");
   };
 
   const handleLogoutAll = () => {

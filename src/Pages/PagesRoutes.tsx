@@ -1,21 +1,17 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import { useAppSelector } from "../store/reduxHooks";
-import React from "react";
+import { Route, Routes } from "react-router-dom";
+
+import React, { Suspense } from "react";
 const HomeRoutes = React.lazy(() => import("./Home/HomeRoutes"));
-const AuthRoutes = React.lazy(() => import("./Auth/AuthRoutes"));
+const ProfileRoutes = React.lazy(() => import("./Profile/ProfileRoures"));
 export default function PagesRoutes() {
-  const { user } = useAppSelector((state) => state.auth);
-
   return (
-    <Routes>
-      <Route path="/home/*" element={<HomeRoutes />} />
-
-      <Route
-        path="/auth/*"
-        element={user ? <Navigate to="/home" replace /> : <AuthRoutes />}
-      />
-
-      <Route path="*" element={<Navigate to="/home" replace />} />
-    </Routes>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>
+        <Route index element={<HomeRoutes />} />
+        <Route path="home/*" element={<HomeRoutes />} />
+        <Route path="profile/*" element={<ProfileRoutes />} />
+        <Route path="*" element={<HomeRoutes />} />
+      </Routes>
+    </Suspense>
   );
 }

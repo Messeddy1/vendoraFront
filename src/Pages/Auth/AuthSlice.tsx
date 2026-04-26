@@ -7,14 +7,14 @@ const initialState: {
   status: (typeof STATUS)[keyof typeof STATUS];
   action: (typeof ACTIONS)[keyof typeof ACTIONS];
   error: string | null;
-  user:undefined | User;
+  user: undefined | User;
   fieldErrors: Record<string, string[]> | null;
 } = {
   status: STATUS.IDLE,
   action: ACTIONS.IDLE,
   error: null,
   fieldErrors: null,
-  user:undefined,
+  user: undefined,
 };
 
 const AuthSlice = createSlice({
@@ -27,7 +27,9 @@ const AuthSlice = createSlice({
         state.status = STATUS.PENDING;
         state.action = ACTIONS.READ;
       })
-      .addCase(login.fulfilled, (state) => {
+      .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
+        state.user = action.payload;
+        console.log(state.user);
         state.status = STATUS.FULFIELD;
         state.action = ACTIONS.READ;
         state.error = null;
@@ -36,8 +38,11 @@ const AuthSlice = createSlice({
       .addCase(login.rejected, (state, action: PayloadAction<unknown>) => {
         state.status = STATUS.REJECTED;
         state.action = ACTIONS.READ;
-        state.error = (action.payload as { message: string }).message || "Login failed";
-        state.fieldErrors = (action.payload as { errors: Record<string, string[]> }).errors || null;
+        state.error =
+          (action.payload as { message: string }).message || "Login failed";
+        state.fieldErrors =
+          (action.payload as { errors: Record<string, string[]> }).errors ||
+          null;
       })
       // register
       .addCase(register.pending, (state) => {
@@ -53,8 +58,12 @@ const AuthSlice = createSlice({
       .addCase(register.rejected, (state, action: PayloadAction<unknown>) => {
         state.status = STATUS.REJECTED;
         state.action = ACTIONS.CREATE;
-        state.error = (action.payload as { message: string }).message || "Registration failed";
-        state.fieldErrors = (action.payload as { errors: Record<string, string[]> }).errors || null;
+        state.error =
+          (action.payload as { message: string }).message ||
+          "Registration failed";
+        state.fieldErrors =
+          (action.payload as { errors: Record<string, string[]> }).errors ||
+          null;
       })
       // get user info
       .addCase(getUserInfo.pending, (state) => {
@@ -78,6 +87,7 @@ const AuthSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.status = STATUS.FULFIELD;
+        state.user = undefined;
         state.action = ACTIONS.READ;
       })
       .addCase(logout.rejected, (state) => {

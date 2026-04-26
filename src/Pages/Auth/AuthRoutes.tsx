@@ -6,6 +6,7 @@ const Register = React.lazy(() => import("./Register"));
 export default function AuthRoutes() {
   return (
     <Routes>
+      <Route index element={<Login />} />
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
     </Routes>

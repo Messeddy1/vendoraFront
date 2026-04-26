@@ -32,16 +32,21 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (userData.password !== userData.password_confirmation) {
-      setPasswordMatchError("Passwords do not match");
-      return;
-    }
-    setLoading(true);
-    const response = await dispatch(register(userData));
-    setLoading(false);
-
-    if (response.payload?.user) {
-      navigate("/home");
+    if (loading) return;
+    try {
+      if (userData.password !== userData.password_confirmation) {
+        setPasswordMatchError("Passwords do not match");
+        return;
+      }
+      setLoading(true);
+      const response = await dispatch(register(userData));
+      if (response.payload?.user) {
+        console.log(response);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -24,10 +24,10 @@ export const Navbar = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-6">
-          <NavLink to="/home" className={linkClass}>
+          <NavLink to="/" className={linkClass}>
             Marketplace
           </NavLink>
-          <NavLink to="/home/subpage" className={linkClass}>
+          <NavLink to="/subpage" className={linkClass}>
             Vendor Portal
           </NavLink>
           {user ? (

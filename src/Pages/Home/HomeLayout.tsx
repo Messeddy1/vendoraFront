@@ -130,8 +130,10 @@ const HomeLayout: React.FC = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getUserInfo());
-  }, [dispatch]);
+    if (!user) {
+      dispatch(getUserInfo());
+    }
+  }, [user,dispatch]);
 
   return (
     <div className="min-h-screen bg-background">

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/reduxHooks";
 import { useNavigate } from "react-router-dom";
-import { login } from "../Auth/cors/_request";
+import { getUserInfo, login } from "../Auth/cors/_request";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 
@@ -10,7 +10,13 @@ export default function Login() {
   const { error, fieldErrors } = useAppSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAppSelector((state) => state.auth);
 
+  useEffect(() => {
+    if (!user) {
+      dispatch(getUserInfo());
+    }
+  }, [user, dispatch]);
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -27,19 +33,37 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    const response = await dispatch(login(userData));
-    setLoading(false);
+    if (loading) return;
 
-    if (response.payload?.user) {
-      navigate("/home");
+    try {
+      setLoading(true);
+      const response = await dispatch(login(userData));
+      console.log(response);
+
+      // Check if login was successful and navigate
+      if (response.payload) {
+        navigate("/", { replace: true });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/", { replace: true });
+    }
+  }, [user, navigate]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 text-foreground">
       <div className="w-full max-w-md rounded-3xl border border-border bg-card p-8 shadow-sm">
-        <h1 className="text-3xl font-semibold text-foreground text-center mb-6">Login to Market</h1>
+        <h1 className="text-3xl font-semibold text-foreground text-center mb-6">
+          Login to Market
+        </h1>
 
         {error && (
           <div className="mb-4 rounded-xl bg-destructive/10 border border-destructive/20 p-4 text-sm text-destructive">
@@ -76,7 +100,9 @@ export default function Login() {
               required
             />
             {fieldErrors?.password && (
-              <p className="text-xs text-destructive">{fieldErrors.password[0]}</p>
+              <p className="text-xs text-destructive">
+                {fieldErrors.password[0]}
+              </p>
             )}
           </div>
 
@@ -86,7 +112,7 @@ export default function Login() {
         </form>
 
         <div className="mt-6 text-center text-sm text-muted-foreground">
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <button
             type="button"
             onClick={() => navigate("/auth/register")}

@@ -2,6 +2,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { ACTIONS, STATUS } from "../../types/Types";
 import { getUserInfo, login, logout, register } from "./cors/_request";
 import type { User } from "./cors/_Modules";
+import { updateProfile } from "../Profile/cors/_requests";
 
 const initialState: {
   status: (typeof STATUS)[keyof typeof STATUS];
@@ -91,7 +92,33 @@ const AuthSlice = createSlice({
       .addCase(logout.rejected, (state) => {
         state.status = STATUS.REJECTED;
         state.action = ACTIONS.READ;
-      });
+      })
+      .addCase(updateProfile.pending, (state) => {
+        state.status = STATUS.PENDING;
+        state.action = ACTIONS.UPDATE;
+      })
+      .addCase(
+        updateProfile.fulfilled,
+        (state, action: PayloadAction<User>) => {
+          state.user = action.payload;
+          state.status = STATUS.FULFIELD;
+          state.action = ACTIONS.UPDATE;
+          state.error = null;
+          state.fieldErrors = null;
+        },
+      )
+      .addCase(
+        updateProfile.rejected,
+        (state, action: PayloadAction<unknown>) => {
+          state.status = STATUS.REJECTED;
+          state.action = ACTIONS.UPDATE;
+          state.error =
+            (action.payload as { message: string }).message || "Update failed";
+          state.fieldErrors =
+            (action.payload as { errors: Record<string, string[]> }).errors ||
+            null;
+        },
+      );
   },
 });
 

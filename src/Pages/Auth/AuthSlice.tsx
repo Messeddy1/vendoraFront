@@ -2,13 +2,14 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { ACTIONS, STATUS } from "../../types/Types";
 import { getUserInfo, login, logout, register } from "./cors/_request";
 import type { User } from "./cors/_Modules";
-import { updateProfile } from "../Profile/cors/_requests";
+import { getuserSessions, updateProfile } from "../Profile/cors/_requests";
 
 const initialState: {
   status: (typeof STATUS)[keyof typeof STATUS];
   action: (typeof ACTIONS)[keyof typeof ACTIONS];
   error: string | null;
   user: null | User;
+  sessions: null;
   fieldErrors: Record<string, string[]> | null;
 } = {
   status: STATUS.IDLE,
@@ -16,6 +17,7 @@ const initialState: {
   error: null,
   fieldErrors: null,
   user: null,
+  sessions: null,
 };
 
 const AuthSlice = createSlice({
@@ -119,6 +121,24 @@ const AuthSlice = createSlice({
             null;
         },
       );
+      builder.addCase(getuserSessions.pending, (state) => {
+        state.status = STATUS.PENDING;
+        state.action = ACTIONS.READ;
+      }).addCase(getuserSessions.fulfilled, (state, action: PayloadAction<User>) => {
+        state.user = action.payload;
+        state.status = STATUS.FULFIELD;
+        state.action = ACTIONS.READ;
+        state.error = null;
+        state.fieldErrors = null;
+      }).addCase(getuserSessions.rejected, (state, action: PayloadAction<unknown>) => {
+        state.status = STATUS.REJECTED;
+        state.action = ACTIONS.READ;
+        state.error =
+          (action.payload as { message: string }).message || "Update failed";
+        state.fieldErrors =
+          (action.payload as { errors: Record<string, string[]> }).errors ||
+          null;
+      })
   },
 });
 

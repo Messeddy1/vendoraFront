@@ -43,3 +43,18 @@ export const updatePassword = createAsyncThunk(
         }
     }
 );
+
+export const getuserSessions = createAsyncThunk(
+    "auth/getSessions",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await api.get(`${API_URL}/user/sessions`);
+            return response.data;
+        } catch (error: unknown) {
+            return rejectWithValue(
+                (error as AxiosError).response?.data || { message: "Failed to get user sessions" }
+            );
+        }
+    }
+);
+

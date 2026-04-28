@@ -1,5 +1,7 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { getuserSessions } from "../cors/_requests";
+import { useAppDispatch } from "@/store/reduxHooks";
 
 interface Session {
   id: string;
@@ -15,8 +17,12 @@ export default function BrowserSessions() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const dispatch = useAppDispatch();
+  const fetch = async() => {
+    await dispatch(getuserSessions());
+  };
   useEffect(() => {
+    fetch();
     // Simulate fetching sessions
     const mockSessions: Session[] = [
       {
@@ -47,7 +53,9 @@ export default function BrowserSessions() {
         isCurrent: false,
       },
     ];
-
+    const resp = fetch();;
+    // setSessions
+    console.log(resp);
     setTimeout(() => {
       setSessions(mockSessions);
       setLoading(false);
@@ -129,7 +137,9 @@ export default function BrowserSessions() {
               <div className="flex items-start justify-between gap-4">
                 {/* Left Section - Icons and Info */}
                 <div className="flex gap-4 flex-1">
-                  <div className="text-3xl">{getBrowserIcon(session.browser)}</div>
+                  <div className="text-3xl">
+                    {getBrowserIcon(session.browser)}
+                  </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-foreground">

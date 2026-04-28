@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../Auth/cors/_request";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
   const params = new URLSearchParams(location.search);
   const redirect = params.get("redirect") || "/";
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { error, fieldErrors } = useAppSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -49,7 +51,7 @@ export default function Login() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 text-foreground">
       <div className="w-full max-w-md rounded-3xl border border-border bg-card p-8 shadow-sm">
         <h1 className="text-3xl font-semibold text-foreground text-center mb-6">
-          Login to Market
+          {t("Login to Market")}
         </h1>
 
         {error && (
@@ -94,18 +96,18 @@ export default function Login() {
           </div>
 
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? "Logging in..." : "Login"}
+            {loading ? t("Logging in...") : t("Login")}
           </Button>
         </form>
 
         <div className="mt-6 text-center text-sm text-muted-foreground">
-          Don't have an account?{" "}
+          {t("Don't have an account?")}{" "}
           <button
             type="button"
             onClick={() => navigate("/auth/register")}
             className="font-semibold text-primary hover:text-primary/80"
           >
-            Register here
+            {t("Register here")}{" "}
           </button>
         </div>
       </div>

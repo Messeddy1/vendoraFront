@@ -58,3 +58,32 @@ export const getuserSessions = createAsyncThunk(
     }
 );
 
+
+export const logoutSession = createAsyncThunk(
+    "auth/logoutSession",
+    async (sessionId:string, { rejectWithValue }) => {
+
+        try {
+            const response = await api.post(`${API_URL}/user/sessions/logout/${sessionId}`);
+            return response.data.sessions;
+        } catch (error: unknown) {
+            return rejectWithValue(
+                (error as AxiosError).response?.data || { message: "Failed to logout session" }
+            );
+        }
+    }
+);
+export const logoutAllSession = createAsyncThunk(
+    "auth/logoutAllSession",
+    async (_, { rejectWithValue }) => {
+
+        try {
+            const response = await api.post(`${API_URL}/user/sessions/logout`);
+            return response.data.sessions;
+        } catch (error: unknown) {
+            return rejectWithValue(
+                (error as AxiosError).response?.data || { message: "Failed to logout session" }
+            );
+        }
+    }
+);

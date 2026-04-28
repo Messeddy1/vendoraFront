@@ -1,191 +1,215 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { getuserSessions } from "../cors/_requests";
-import { useAppDispatch } from "@/store/reduxHooks";
-
-interface Session {
-  id: string;
-  browser: string;
-  device: string;
-  location: string;
-  ipAddress: string;
-  lastActivity: string;
-  isCurrent: boolean;
-}
+import {
+  getuserSessions,
+  logoutAllSession,
+  logoutSession,
+} from "../cors/_requests";
+import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
+import {
+  Clock1Icon,
+  MonitorUpIcon,
+  PhoneOffIcon,
+  PinOffIcon,
+  RefreshCwIcon,
+} from "lucide-react";
+import { toast } from "sonner";
 
 export default function BrowserSessions() {
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { sessions, status, error } = useAppSelector(
+    (state) => state.userSessions,
+  );
   const dispatch = useAppDispatch();
-  const fetch = async() => {
-    await dispatch(getuserSessions());
-  };
-  useEffect(() => {
-    fetch();
-    // Simulate fetching sessions
-    const mockSessions: Session[] = [
-      {
-        id: "1",
-        browser: "Chrome",
-        device: "MacBook Pro",
-        location: "Cairo, Egypt",
-        ipAddress: "192.168.1.1",
-        lastActivity: "Just now",
-        isCurrent: true,
-      },
-      {
-        id: "2",
-        browser: "Safari",
-        device: "iPhone 14",
-        location: "Cairo, Egypt",
-        ipAddress: "192.168.1.2",
-        lastActivity: "2 hours ago",
-        isCurrent: false,
-      },
-      {
-        id: "3",
-        browser: "Firefox",
-        device: "Windows PC",
-        location: "Giza, Egypt",
-        ipAddress: "192.168.1.3",
-        lastActivity: "1 day ago",
-        isCurrent: false,
-      },
-    ];
-    const resp = fetch();;
-    // setSessions
-    console.log(resp);
-    setTimeout(() => {
-      setSessions(mockSessions);
-      setLoading(false);
-    }, 800);
-  }, []);
 
-  const handleLogoutSession = (sessionId: string) => {
-    setSessions((prev) => prev.filter((s) => s.id !== sessionId));
-    setError("");
-  };
-
-  const handleLogoutAll = () => {
-    const currentSession = sessions.find((s) => s.isCurrent);
-    if (currentSession) {
-      setSessions([currentSession]);
+  const fetch = async () => {
+    try {
+      await dispatch(getuserSessions());
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  const getBrowserIcon = (browser: string) => {
-    const icons: Record<string, string> = {
-      Chrome: "🌐",
-      Safari: "🧭",
-      Firefox: "🔥",
-      Edge: "📘",
-      Opera: "🎭",
-    };
-    return icons[browser] || "🌐";
+  useEffect(() => {
+    fetch();
+  }, []);
+
+  const handleLogoutSession = async (sessionId: string) => {
+    try {
+      const response = await dispatch(logoutSession(sessionId));
+      if (response.meta.requestStatus === "fulfilled")
+        toast.success("Session logged out");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const getDeviceIcon = (device: string) => {
-    if (device.includes("MacBook")) return "💻";
-    if (device.includes("iPhone")) return "📱";
-    if (device.includes("iPad")) return "📱";
-    if (device.includes("Windows")) return "🖥️";
-    return "💻";
+  const handleLogoutAll = async () => {
+    try {
+      const response = await dispatch(logoutAllSession());
+      if (response.meta.requestStatus === "fulfilled")
+        toast.success("All sessions logged out");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header with Logout All Button */}
+    <div className="space-y-4 py-2">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <p className="text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Manage your active sessions and logged-in devices
         </p>
-        {sessions.length > 1 && (
+        {sessions && sessions.length > 1 && (
           <Button
             onClick={handleLogoutAll}
-            variant="destructive"
-            className="rounded-lg h-10"
+            variant="outline"
+            className="h-9 rounded-lg border-destructive/40 text-destructive hover:bg-destructive/5 text-sm"
           >
-            Logout All Other Sessions
+            Logout all other sessions
           </Button>
         )}
       </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="text-muted-foreground">Loading sessions...</div>
+      {/* Refresh */}
+      <div>
+        <Button
+          onClick={fetch}
+          variant="ghost"
+          size="sm"
+          className="h-8 gap-1.5 text-muted-foreground text-xs px-3"
+        >
+          <RefreshCwIcon
+            className={`${status === "PENDING" && "animate-spin"} h-4 w-4 `}
+          />
+          Refresh
+        </Button>
+      </div>
+
+      {/* States */}
+      {status === "PENDING" ? (
+        <div className="flex items-center justify-center py-10">
+          <p className="text-sm text-muted-foreground">Loading sessions...</p>
         </div>
       ) : error ? (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
-          ✕ {error}
+        <div className="p-4 rounded-lg border border-destructive/30 bg-destructive/5 text-sm text-destructive">
+          {error}
         </div>
-      ) : sessions.length === 0 ? (
-        <div className="p-12 text-center">
-          <p className="text-muted-foreground">No active sessions</p>
+      ) : sessions && sessions.length === 0 ? (
+        <div className="py-10 text-center">
+          <p className="text-sm text-muted-foreground">No active sessions</p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {sessions.map((session) => (
-            <div
-              key={session.id}
-              className={`p-6 border rounded-xl transition-all ${
-                session.isCurrent
-                  ? "border-primary bg-primary/5 shadow-md"
-                  : "border-border bg-background hover:border-primary/50"
-              }`}
-            >
-              <div className="flex items-start justify-between gap-4">
-                {/* Left Section - Icons and Info */}
-                <div className="flex gap-4 flex-1">
-                  <div className="text-3xl">
-                    {getBrowserIcon(session.browser)}
+        <div className="space-y-2.5">
+          {sessions &&
+            sessions.map((session) => (
+              <div
+                key={session.id}
+                className={`flex items-start justify-between gap-4 p-4 rounded-xl border transition-colors ${
+                  session.is_this_device
+                    ? "border-blue-400 bg-blue-50 dark:bg-blue-950/30"
+                    : "border-border bg-background hover:border-border/80"
+                }`}
+              >
+                {/* Left */}
+                <div className="flex gap-3 flex-1">
+                  {/* Device icon */}
+                  <div
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border ${
+                      session.is_this_device
+                        ? "bg-blue-100 border-blue-200 text-blue-700"
+                        : "bg-muted border-border text-muted-foreground"
+                    }`}
+                  >
+                    {session.user_agent.is_desktop ? (
+                      <MonitorUpIcon />
+                    ) : (
+                      <PhoneOffIcon />
+                    )}
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-foreground">
-                        {session.browser} on {session.device}
-                      </h3>
-                      {session.isCurrent && (
-                        <span className="px-3 py-1 bg-primary/20 text-primary text-xs font-semibold rounded-full">
-                          Current Session
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span
+                        className={`text-sm font-medium ${
+                          session.is_this_device
+                            ? "text-blue-900 dark:text-blue-100"
+                            : "text-foreground"
+                        }`}
+                      >
+                        {session.user_agent.browser} on{" "}
+                        {session.user_agent.platform}
+                      </span>
+                      {session.is_this_device && (
+                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-blue-600 text-blue-50 font-normal">
+                          Current session
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      {getDeviceIcon(session.device)} {session.device}
+
+                    <p
+                      className={`text-xs mb-2 ${
+                        session.is_this_device
+                          ? "text-blue-600 dark:text-blue-300"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      {session.user_agent.is_desktop ? "Desktop" : "Mobile"} ·{" "}
+                      {session.is_this_device
+                        ? "This device"
+                        : "Another device"}
                     </p>
-                    <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                      <p>📍 {session.location}</p>
-                      <p>🔗 IP: {session.ipAddress}</p>
-                      <p>⏱️ Last activity: {session.lastActivity}</p>
+
+                    <div className="flex flex-col gap-1">
+                      <span className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
+                        <Clock1Icon className="h-4" />
+                        {session.last_activity}
+                      </span>
+                      <span className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
+                        <PinOffIcon className="h-4" />
+                        {session.ip_address}
+                      </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Right Section - Action Button */}
-                {!session.isCurrent && (
+                {/* Logout button */}
+                {!session.is_this_device && (
                   <Button
                     onClick={() => handleLogoutSession(session.id)}
                     variant="outline"
-                    className="rounded-lg h-10 border-destructive/30 text-destructive hover:bg-destructive/10"
+                    size="sm"
+                    className="h-8 text-xs rounded-lg border-destructive/30 text-destructive hover:bg-destructive/5 shrink-0"
                   >
                     Logout
                   </Button>
                 )}
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       )}
 
-      {/* Security Info */}
-      <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-xl">
-        <h4 className="font-semibold text-blue-900 mb-2">🔒 Security Tips</h4>
-        <ul className="text-sm text-blue-800 space-y-2">
-          <li>• Regularly review your active sessions</li>
-          <li>• Logout from devices you no longer use</li>
-          <li>• Change your password if you see unfamiliar devices</li>
-          <li>• Use strong, unique passwords for your account</li>
+      {/* Security tips */}
+      <div className="mt-4 p-4 rounded-xl bg-muted/50 border border-border">
+        <h4 className="text-sm font-medium text-foreground mb-2.5">
+          Security tips
+        </h4>
+        <ul className="space-y-1.5">
+          {[
+            "Review your active sessions regularly",
+            "Logout from devices you no longer use",
+            "Change your password if you see an unfamiliar device",
+            "Use a strong, unique password for your account",
+          ].map((tip) => (
+            <li
+              key={tip}
+              className="flex items-start gap-2 text-xs text-muted-foreground"
+            >
+              <span className="w-1 h-1 rounded-full bg-muted-foreground/40 mt-1.5 shrink-0" />
+              {tip}
+            </li>
+          ))}
         </ul>
       </div>
     </div>

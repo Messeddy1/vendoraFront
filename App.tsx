@@ -1,10 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Navbar } from "./src/Components/NavBar";
+import { Toaster } from "sonner";
 export default function App() {
-
-
-
-
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <header className="sticky top-0 z-30 shadow-sm bg-background/95 backdrop-blur-md border-b">
@@ -14,6 +11,7 @@ export default function App() {
       <main className="flex-1">
         <Outlet />
       </main>
+      <Toaster />
     </div>
   );
 }

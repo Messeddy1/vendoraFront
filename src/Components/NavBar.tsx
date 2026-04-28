@@ -1,6 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/reduxHooks";
 import { logout } from "../Pages/Auth/cors/_request";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export const Navbar = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -22,7 +23,6 @@ export const Navbar = () => {
             Ecommerce
           </span>
         </div>
-
         <div className="flex flex-wrap items-center gap-6">
           <NavLink to="/" className={linkClass}>
             Marketplace
@@ -43,16 +43,15 @@ export const Navbar = () => {
             </NavLink>
           )}
         </div>
-
         {user ? (
-          <Link
-            to="/profile">
-          <p className="w-full text-sm text-muted-foreground sm:w-auto">
-            Signed in as <span className="text-primary">{user.name}</span> •{" "}
-            {user.role || "customer"}
-          </p>
+          <Link to="/profile">
+            <p className="w-full text-sm text-muted-foreground sm:w-auto">
+              Signed in as <span className="text-primary">{user.name}</span> •{" "}
+              {user.role || "customer"}
+            </p>
           </Link>
         ) : null}
+          <LanguageSwitcher />
       </div>
     </nav>
   );

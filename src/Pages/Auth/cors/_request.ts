@@ -23,7 +23,7 @@ export const login = createAsyncThunk(
         try {
             await api.get(`${BASE_URL}/sanctum/csrf-cookie`);
             const response = await api.post(`${BASE_URL}/login`, credentials);
-            return response.data;
+            return response.data.user;
         } catch (error: unknown) {
             return rejectWithValue(
                 (error as AxiosError).response?.data || { message: "Login failed" }

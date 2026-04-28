@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
+import { updatePassword } from "../cors/_requests";
+import { useAppDispatch } from "@/store/reduxHooks";
+interface FormData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
 export default function ChangePasswordForm() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -45,8 +52,13 @@ export default function ChangePasswordForm() {
     setLoading(true);
 
     try {
-      // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const data = {
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword,
+        confirmPassword: formData.confirmPassword,
+      };
+      const response = await dispatch(updatePassword(data)).unwrap();
+      console.log(response);
       setSuccess(true);
       setFormData({
         currentPassword: "",
@@ -79,8 +91,8 @@ export default function ChangePasswordForm() {
 
       {/* Security Notice */}
       <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-800">
-        💡 Use a strong password with at least 8 characters, including uppercase,
-        lowercase, numbers, and special characters.
+        💡 Use a strong password with at least 8 characters, including
+        uppercase, lowercase, numbers, and special characters.
       </div>
 
       {/* Current Password */}

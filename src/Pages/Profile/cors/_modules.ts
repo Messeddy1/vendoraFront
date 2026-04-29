@@ -10,5 +10,9 @@ export interface UserSessionInterface {
   };
  last_activity: string;
   is_this_device: boolean;
+  location: {
+    city: string;
+    country: string;
+  };
 }
 

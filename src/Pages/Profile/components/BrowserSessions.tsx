@@ -8,6 +8,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import {
   Clock1Icon,
+  MapPinIcon,
   MonitorUpIcon,
   PhoneOffIcon,
   PinOffIcon,
@@ -169,6 +170,10 @@ export default function BrowserSessions() {
                       <span className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
                         <PinOffIcon className="h-4" />
                         {session.ip_address}
+                      </span>
+                      <span className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
+                        <MapPinIcon className="h-4" />
+                        {session.location.city}, {session.location.country}
                       </span>
                     </div>
                   </div>

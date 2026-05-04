@@ -4,6 +4,7 @@ import React, { Suspense } from "react";
 const HomeRoutes = React.lazy(() => import("./Home/HomeRoutes"));
 const ProfileRoutes = React.lazy(() => import("./Profile/ProfileRoures"));
 const NotFoundPage = React.lazy(() => import("@/Components/NotFound"));
+const DashboardRoutes = React.lazy(() => import("./Dashboard/DashboardRoutes"));
 export default function PagesRoutes() {
   return (
     <Suspense
@@ -16,7 +17,7 @@ export default function PagesRoutes() {
       <Routes>
         <Route index element={<HomeRoutes />} />
         <Route path="profile/*" element={<ProfileRoutes />} />
-        <Route path="admin/*" element={'admin'} />
+        <Route path="admin/*" element={<DashboardRoutes />} />
         <Route path="/*" element={<HomeRoutes />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

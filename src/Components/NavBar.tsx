@@ -6,7 +6,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 export const Navbar = () => {
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-
+console.log(user)
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     isActive
       ? "text-primary font-semibold"
@@ -29,7 +29,7 @@ export const Navbar = () => {
           <NavLink to="/subpage" className={linkClass}>
             Vendor Portal
           </NavLink>
-          {user?.roles[0] === "superadmin" && (
+          {user?.roles && user?.roles[0] === "superadmin" && (
             <NavLink to="/admin" className={linkClass}>
               Admin
             </NavLink>
@@ -53,7 +53,7 @@ export const Navbar = () => {
           <Link to="/profile">
             <p className="w-full text-sm text-muted-foreground sm:w-auto">
               Signed in as <span className="text-primary">{user.name}</span> •{" "}
-              {user?.roles[0] || "customer"}
+              {user?.roles && user?.roles[0] || "customer"}
             </p>
           </Link>
         ) : null}

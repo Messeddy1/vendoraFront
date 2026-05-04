@@ -9,7 +9,7 @@ import { User, Settings, Key, Package, Home } from "lucide-react";
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar className="mt-12">
       <SidebarHeader>
         <div className="px-4 py-2">
           <h2 className="text-lg font-semibold">Vendora</h2>

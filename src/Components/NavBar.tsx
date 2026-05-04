@@ -6,7 +6,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 export const Navbar = () => {
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-console.log(user)
+  console.log(user);
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     isActive
       ? "text-primary font-semibold"
@@ -35,7 +35,6 @@ console.log(user)
             </NavLink>
           )}
 
-
           {user ? (
             <button
               className="text-muted-foreground hover:text-primary transition"
@@ -53,7 +52,7 @@ console.log(user)
           <Link to="/profile">
             <p className="w-full text-sm text-muted-foreground sm:w-auto">
               Signed in as <span className="text-primary">{user.name}</span> •{" "}
-              {user?.roles && user?.roles[0] || "customer"}
+              {(user?.roles && user?.roles[0]) || "customer"}
             </p>
           </Link>
         ) : null}

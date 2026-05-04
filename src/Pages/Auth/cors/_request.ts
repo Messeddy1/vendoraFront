@@ -23,7 +23,7 @@ export const login = createAsyncThunk(
         try {
             await api.get(`${BASE_URL}/sanctum/csrf-cookie`);
             const response = await api.post(`${BASE_URL}/login`, credentials);
-            return response.data.user;
+            return response.data.data;
         } catch (error: unknown) {
             return rejectWithValue(
                 (error as AxiosError).response?.data || { message: "Login failed" }
@@ -52,7 +52,7 @@ export const register = createAsyncThunk(
         try {
             await api.get(`${BASE_URL}/sanctum/csrf-cookie`);
             const response = await api.post(`${BASE_URL}/register`, credentials);
-            return response.data;
+            return response.data.data;
         } catch (error: unknown) {
             return rejectWithValue(
                 (error as AxiosError).response?.data || { message: "Registration failed" }
@@ -68,7 +68,7 @@ export const getUserInfo = createAsyncThunk(
         try {
             await api.get(`${BASE_URL}/sanctum/csrf-cookie`);
             const response = await api.get(`${BASE_URL}/api/user`);
-            return response.data;
+            return response.data.data;
         } catch (error: unknown) {
             return rejectWithValue(
                 (error as AxiosError).response?.data || { message: "Failed to get user info" }

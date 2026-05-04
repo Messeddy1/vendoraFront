@@ -11,7 +11,6 @@ export const Navbar = () => {
     isActive
       ? "text-primary font-semibold"
       : "text-muted-foreground hover:text-primary transition";
-
   return (
     <nav className="w-full bg-background text-foreground shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-4">
@@ -30,6 +29,13 @@ export const Navbar = () => {
           <NavLink to="/subpage" className={linkClass}>
             Vendor Portal
           </NavLink>
+          {user?.roles[0] === "superadmin" && (
+            <NavLink to="/admin" className={linkClass}>
+              Admin
+            </NavLink>
+          )}
+
+
           {user ? (
             <button
               className="text-muted-foreground hover:text-primary transition"
@@ -47,11 +53,11 @@ export const Navbar = () => {
           <Link to="/profile">
             <p className="w-full text-sm text-muted-foreground sm:w-auto">
               Signed in as <span className="text-primary">{user.name}</span> •{" "}
-              {user.role || "customer"}
+              {user?.roles[0] || "customer"}
             </p>
           </Link>
         ) : null}
-          <LanguageSwitcher />
+        <LanguageSwitcher />
       </div>
     </nav>
   );

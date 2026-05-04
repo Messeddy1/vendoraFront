@@ -16,6 +16,7 @@ export default function PagesRoutes() {
       <Routes>
         <Route index element={<HomeRoutes />} />
         <Route path="profile/*" element={<ProfileRoutes />} />
+        <Route path="admin/*" element={'admin'} />
         <Route path="/*" element={<HomeRoutes />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

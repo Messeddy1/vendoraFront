@@ -3,7 +3,7 @@ import { Navbar } from "./src/Components/NavBar";
 import { Toaster } from "sonner";
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="min-h-screen flex flex-col bg-gray-400/50 text-foreground">
       <header className="sticky top-0 z-30 shadow-sm bg-background/95 backdrop-blur-md border-b">
         <Navbar />
       </header>

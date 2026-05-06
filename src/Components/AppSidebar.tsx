@@ -6,12 +6,20 @@ import {
   SidebarGroup,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { sidebarLinks } from "@/data/SideBarlinks";
+import { getSidebarLinks } from "@/data/SideBarlinks";
 import { ChevronRight } from "lucide-react";
+import { useAppSelector } from "@/store/reduxHooks";
+import { Link, useLocation } from "react-router-dom";
 
 export function AppSidebar() {
   const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
+  const { user } = useAppSelector((state) => state.auth);
+  const location = useLocation();
 
+  const isActive = (path: string) => {
+  return location.pathname.startsWith(path);
+};
+  const role = user?.roles && user?.roles[0];
   const toggleItem = (index: number) => {
     setOpenItems((prev) => ({
       ...prev,
@@ -30,7 +38,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <nav className="space-y-2">
-            {sidebarLinks.map((item, index) => {
+            {getSidebarLinks(role || null).map((item: any, index: number) => {
               const Icon = item.icon;
               const isOpen = openItems[index];
 
@@ -58,17 +66,17 @@ export function AppSidebar() {
                     {/* children */}
                     {isOpen && (
                       <div className="ml-6 space-y-1">
-                        {item.children.map((child, i) => {
+                        {item.children.map((child: any, i: number) => {
                           const ChildIcon = child.icon;
                           return (
-                            <a
+                            <Link
                               key={i}
-                              href={child.href}
-                              className="flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+                              to={child.href}
+                              className={`flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors ${isActive(child.href) ? "bg-accent text-accent-foreground" : ""}`}
                             >
                               <ChildIcon className="w-4 h-4" />
                               {child.label}
-                            </a>
+                            </Link>
                           );
                         })}
                       </div>
@@ -79,14 +87,14 @@ export function AppSidebar() {
 
               // ✅ إذا ما عندوش children
               return (
-                <a
-                  key={index}
-                  href={item.href}
-                  className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
-                >
-                  <Icon className="w-4 h-4" />
-                  {item.label}
-                </a>
+                  <Link
+                    key={index}
+                    to={item.href}
+                    className={`flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors ${isActive(item.href) ? "bg-accent text-accent-foreground" : ""}`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    {item.label}
+                  </Link>
               );
             })}
           </nav>

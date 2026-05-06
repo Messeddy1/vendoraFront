@@ -13,7 +13,7 @@ export default function Profile() {
         {/* Header Section */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-20 h-20 rounded-full  from-primary to-primary/70 flex items-center justify-center shadow-lg">
+            <div className="w-20 h-20 rounded-full  bg-primary flex items-center justify-center shadow-lg">
               <span className="text-3xl font-bold text-primary-foreground">
                 {user?.name?.[0]?.toUpperCase()}
               </span>

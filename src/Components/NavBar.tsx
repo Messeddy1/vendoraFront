@@ -6,7 +6,6 @@ import LanguageSwitcher from "./LanguageSwitcher";
 export const Navbar = () => {
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-  console.log(user);
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     isActive
       ? "text-primary font-semibold"

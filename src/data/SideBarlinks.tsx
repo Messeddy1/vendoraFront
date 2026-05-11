@@ -70,13 +70,8 @@ export const getSidebarLinks = (role:string|null) => {
       icon: Package,
     },
     {
-      label: "Roles",
-      href: "/admin/roles",
-      icon: Shield,
-    },
-    {
-      label: "Permissions",
-      href: "/admin/permissions",
+      label: "Roles & Permissions",
+      href: "/admin/roles-permissions",
       icon: Shield,
     },
   ];

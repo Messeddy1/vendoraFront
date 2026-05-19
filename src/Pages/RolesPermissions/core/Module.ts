@@ -1,14 +1,9 @@
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  avatar: string;
-}
+import type { User } from "@/Pages/Auth/cors/_Modules";
+
 
 export interface Permission {
   id: string;
-  label: string;
-  module: string;
+  name: string;
 }
 
 export interface Role {
@@ -16,7 +11,7 @@ export interface Role {
   name: string;
   createdAt: string;
   permissions: string[];
-  userIds: number[];
+  users: User[];
 }
 
 export type TabType = "roles" | "permissions";

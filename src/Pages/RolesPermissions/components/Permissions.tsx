@@ -1,108 +1,95 @@
-import React from 'react'
-import type { Permission, Role } from '../core/Module';
-import { Checkbox } from '../Helpers/utils';
+import type { Permission, Role } from "../core/Module";
+
 interface Props {
-    roles: Role[]
-    PERMISSIONS: Permission[]
-    MODULES: string[]
-    selectedRoleId: number
-    selectedRole: Role | undefined
-    togglePermission: (permId: string) => void
-    toggleAllInModule: (mod: string) => void
-    setSelectedRoleId: React.Dispatch<React.SetStateAction<number>>
+  roles: Role[];
 }
-export default function Permissions({roles,selectedRoleId,selectedRole,togglePermission,toggleAllInModule,setSelectedRoleId,PERMISSIONS,MODULES}: Props) {
+
+const roleColors = [
+  {
+    bg: "bg-purple-50",
+    border: "border-purple-200",
+    badge: "bg-purple-100 text-purple-700",
+    dot: "bg-purple-400",
+  },
+  {
+    bg: "bg-blue-50",
+    border: "border-blue-200",
+    badge: "bg-blue-100 text-blue-700",
+    dot: "bg-blue-400",
+  },
+  {
+    bg: "bg-green-50",
+    border: "border-green-200",
+    badge: "bg-green-100 text-green-700",
+    dot: "bg-green-400",
+  },
+  {
+    bg: "bg-orange-50",
+    border: "border-orange-200",
+    badge: "bg-orange-100 text-orange-700",
+    dot: "bg-orange-400",
+  },
+  {
+    bg: "bg-pink-50",
+    border: "border-pink-200",
+    badge: "bg-pink-100 text-pink-700",
+    dot: "bg-pink-400",
+  },
+];
+
+export default function Permissions({ roles }: Props) {
   return (
-        <div>
-          {/* Role selector */}
-          <div className="flex items-center gap-3 mb-6">
-            <label className="text-sm font-semibold text-gray-700 whitespace-nowrap">
-              Role:
-            </label>
-            <select
-              value={selectedRoleId}
-              onChange={(e) => setSelectedRoleId(Number(e.target.value))}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 bg-white cursor-pointer focus:outline-blue-500 focus:outline-2 focus:outline-offset-1 min-w-45"
-            >
-              {roles.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.name}
-                </option>
-              ))}
-            </select>
-            <span className="text-sm text-gray-500">
-              {selectedRole?.permissions.length} / {PERMISSIONS.length}{" "}
-              permissions enabled
-            </span>
-          </div>
+    <div className="space-y-4">
+      {roles.map((role, i) => {
+        const color = roleColors[i % roleColors.length];
+        return (
+          <div
+            key={role.id}
+            className={`rounded-xl border ${color.border} ${color.bg} p-5`}
+          >
+            {/* Role header */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className={`w-2.5 h-2.5 rounded-full ${color.dot}`} />
+                <h3 className="text-sm font-bold text-gray-900 capitalize">
+                  {role.name}
+                </h3>
+              </div>
+              <span className="text-xs font-semibold text-gray-500 bg-white border border-gray-200 rounded-full px-2.5 py-0.5">
+                {role.permissions.length} permissions
+              </span>
+            </div>
 
-          {/* Permissions checklist grouped by module */}
-          <div className="space-y-3">
-            {MODULES.map((mod) => {
-              const modPerms = PERMISSIONS.filter((p) => p.module === mod);
-              const allChecked = modPerms.every((p) =>
-                selectedRole?.permissions.includes(p.id),
-              );
-              return (
-                <div
-                  key={mod}
-                  className="bg-white border border-gray-200 rounded-lg overflow-hidden"
-                >
-                  {/* Module header */}
-                  <div
-                    onClick={() => toggleAllInModule(mod)}
-                    className="flex items-center gap-3 px-5 py-3 bg-gray-50 border-b border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors"
-                  >
-                    <Checkbox checked={allChecked} onChange={() => {}} />
-                    <span className="font-semibold text-sm text-gray-700">
-                      {mod}
-                    </span>
-                    <span className="text-xs text-gray-500 ml-auto">
-                      {
-                        modPerms.filter((p) =>
-                          selectedRole?.permissions.includes(p.id),
-                        ).length
-                      }
-                      /{modPerms.length}
-                    </span>
-                  </div>
-                  {/* Permission rows */}
-                  {modPerms.map((perm, i) => {
-                    const checked = selectedRole?.permissions.includes(perm.id);
-                    return (
-                      <div
-                        key={perm.id}
-                        onClick={() => togglePermission(perm.id)}
-                        className={`flex items-center gap-3 px-5 py-3 pl-16 cursor-pointer transition-colors ${
-                          i < modPerms.length - 1
-                            ? "border-b border-gray-100"
-                            : ""
-                        } hover:bg-gray-50`}
-                      >
-                        <Checkbox
-                          checked={checked || false}
-                          onChange={() => {}}
-                        />
-                        <span className="text-sm font-medium text-gray-700 flex-1">
-                          {perm.label}
-                        </span>
-                        <code className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded font-mono">
-                          {perm.id}
-                        </code>
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </div>
+            {/* Permissions badges */}
+            {role.permissions.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {role.permissions.map((perm) => {
+                  const isString = typeof perm === "string";
+                  const key = isString
+                    ? perm
+                    : (perm as unknown as Permission).id;
+                  const label = isString
+                    ? perm
+                    : (perm as unknown as Permission).name;
 
-          {/* Save button */}
-          <div className="mt-6 flex justify-end">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90">
-              Save Changes
-            </button>
+                  return (
+                    <span
+                      key={key}
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${color.badge}`}
+                    >
+                      {label}
+                    </span>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-xs text-gray-400 italic">
+                No permissions assigned
+              </p>
+            )}
           </div>
-        </div>
-  )
+        );
+      })}
+    </div>
+  );
 }

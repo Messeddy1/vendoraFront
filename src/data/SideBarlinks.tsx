@@ -1,28 +1,36 @@
-import { User, Settings, Key, Package, Shield, Users, BarChart } from "lucide-react";
+import {
+  User,
+  // Settings,
+  // Key,
+  Package,
+  Shield,
+  Users,
+  BarChart,
+} from "lucide-react";
 
-export const getSidebarLinks = (role:string|null) => {
+export const getSidebarLinks = (role: string | null) => {
   const baseLinks = [
     {
       label: "Profile",
       href: "/admin/profile",
       icon: User,
     },
-    {
-      label: "Settings",
-      icon: Settings,
-      children: [
-        {
-          label: "User Info",
-          href: "/admin/profile/info",
-          icon: Settings,
-        },
-        {
-          label: "Change Password",
-          href: "/admin/profile/password",
-          icon: Key,
-        },
-      ],
-    },
+    // {
+    //   label: "Settings",
+    //   icon: Settings,
+    //   children: [
+    //     {
+    //       label: "User Info",
+    //       href: "/admin/profile/info",
+    //       icon: Settings,
+    //     },
+    //     {
+    //       label: "Change Password",
+    //       href: "/admin/profile/password",
+    //       icon: Key,
+    //     },
+    //   ],
+    // },
   ];
 
   const vendorLinks = [

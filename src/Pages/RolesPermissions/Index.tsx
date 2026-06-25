@@ -3,7 +3,7 @@ import Roles from "./components/Roles";
 import type { Permission, Role, TabType } from "./core/Module";
 import Permissions from "./components/Permissions";
 import TabsSwitcher from "@/Components/TabsSwitcher";
-import { PlusIcon } from "lucide-react";
+// import { PlusIcon } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import { getRolesPermissions } from "./core/_requests";
 import { toast } from "sonner";
@@ -78,11 +78,11 @@ export default function Index() {
             Manage access control for your application
           </p>
         </div>
-        {tab === "roles" && (
+        {/* {tab === "roles" && (
           <button className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 flex items-center">
             <PlusIcon className="w-4 h-4 mr-2" /> New Role
           </button>
-        )}
+        )} */}
       </div>
 
       {/* Tabs */}

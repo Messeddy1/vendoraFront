@@ -2,6 +2,7 @@ import React from "react";
 import type { Role } from "../core/Module";
 import { Avatar, Badge } from "../Helpers/utils";
 import { RefreshCcw } from "lucide-react";
+import { t } from "i18next";
 
 interface Props {
   roles: Role[];
@@ -16,13 +17,12 @@ export default function Roles({
   setExpandedRole,
   fetchRoles,
 }: Props) {
-  console.log(roles);
   return (
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200">
         <div>
-          <h2 className="text-sm font-semibold text-gray-900">Roles</h2>
+          <h2 className="text-sm font-semibold text-gray-900">{t("Roles")}</h2>
           <p className="text-xs text-gray-500">
             Manage roles and assigned users
           </p>

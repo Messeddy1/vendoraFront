@@ -5,7 +5,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/reduxHooks";
 import type { Category, CreateCategoryPayload } from "../core/Module";
 import { ACTIONS, STATUS } from "@/types/Types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createCategory, updateCategory } from "../core/_requests";
 import FormField from "./FormField";
 import { FieldError } from "./FieldError";
@@ -31,14 +31,6 @@ function CategoryModal({ editing, onClose }: ModalProps) {
         description: editing?.description ?? "",
         image: editing?.image ?? "",
     });
-
-    useEffect(() => {
-        setForm({
-            name: editing?.name ?? "",
-            description: editing?.description ?? "",
-            image: editing?.image ?? "",
-        });
-    }, [editing]);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

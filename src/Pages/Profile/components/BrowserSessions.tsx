@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   getuserSessions,
@@ -22,17 +22,17 @@ export default function BrowserSessions() {
   );
   const dispatch = useAppDispatch();
 
-  const fetch = async () => {
+  const fetch = useCallback(async () => {
     try {
       await dispatch(getuserSessions());
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     fetch();
-  }, []);
+  }, [fetch]);
 
   const handleLogoutSession = async (sessionId: string) => {
     try {

@@ -147,7 +147,11 @@ export default function CategoriesPage() {
 
       {/* ── Modals ── */}
       {showModal && (
-        <CategoryModal editing={editingCategory} onClose={closeModal} />
+        <CategoryModal
+          key={editingCategory?.id ?? "create"}
+          editing={editingCategory}
+          onClose={closeModal}
+        />
       )}
       {deletingCategory && (
         <DeleteDialog

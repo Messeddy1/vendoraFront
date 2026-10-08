@@ -66,7 +66,7 @@ export default function ChangePasswordForm() {
         confirmPassword: "",
       });
       setTimeout(() => setSuccess(false), 3000);
-    } catch (err) {
+    } catch {
       setError("Failed to change password");
     } finally {
       setLoading(false);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Roles from "./components/Roles";
 import type { Permission, Role, TabType } from "./core/Module";
 import Permissions from "./components/Permissions";
@@ -15,17 +15,17 @@ export default function Index() {
   const { data, status } = useAppSelector((state) => state.RolesPermissions);
   const [expandedRole, setExpandedRole] = useState<number | null>(null);
   console.log("data", data);
-  const fetchRoles = async () => {
+  const fetchRoles = useCallback(async () => {
     try {
       await dispatch(getRolesPermissions());
       toast.success("Roles fetched successfully");
     } catch (error) {
       console.error("Error fetching roles:", error);
     }
-  };
+  }, [dispatch]);
   useEffect(() => {
     fetchRoles();
-  }, []);
+  }, [fetchRoles]);
   // function togglePermission(permId: string) {
   //   setRoles((prev) =>
   //     prev.map((r) => {
